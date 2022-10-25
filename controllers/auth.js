@@ -4,9 +4,7 @@ const asyncHandler = require('../middleware/async');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
 
-// @desc      Register user
-// @route     POST /api/v1/auth/register
-// @access    Public
+
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
@@ -39,9 +37,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-// @desc      Login user
-// @route     POST /api/v1/auth/login
-// @access    Public
+
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -67,9 +63,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-// @desc      Log user out / clear cookie
-// @route     GET /api/v1/auth/logout
-// @access    Public
+
 exports.logout = asyncHandler(async (req, res, next) => {
   res.cookie('token', 'none', {
     expires: new Date(Date.now() + 10 * 1000),
@@ -82,9 +76,7 @@ exports.logout = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Get current logged in user
-// @route     GET /api/v1/auth/me
-// @access    Private
+
 exports.getMe = asyncHandler(async (req, res, next) => {
   // user is already available in req due to the protect middleware
   const user = req.user;
@@ -95,9 +87,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Update user details
-// @route     PUT /api/v1/auth/updatedetails
-// @access    Private
+
 exports.updateDetails = asyncHandler(async (req, res, next) => {
   const fieldsToUpdate = {
     name: req.body.name,
@@ -115,9 +105,7 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc      Update password
-// @route     PUT /api/v1/auth/updatepassword
-// @access    Private
+
 exports.updatePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
@@ -132,9 +120,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-// @desc      Forgot password
-// @route     POST /api/v1/auth/forgotpassword
-// @access    Public
+
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
@@ -173,9 +159,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
-// @desc      Reset password
-// @route     PUT /api/v1/auth/resetpassword/:resettoken
-// @access    Public
+
 exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Get hashed token
   const resetPasswordToken = crypto
@@ -201,11 +185,7 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-/**
- * @desc    Confirm Email
- * @route   GET /api/v1/auth/confirmemail
- * @access  Public
- */
+
 exports.confirmEmail = asyncHandler(async (req, res, next) => {
   // grab token from email
   const { token } = req.query;
